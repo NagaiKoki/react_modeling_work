@@ -1,5 +1,7 @@
 import Entity from "../shared/Entity"
 import TaskName, { TaskNameProps } from "../values/TaskName"
+import TaskDetail, { TaskDetailProps } from "../values/TaskDetail"
+import TaskPriority, { TaskPriorityProps } from "../values/TaskPriority"
 
 /**
  * - タスク名 
@@ -13,6 +15,14 @@ export default class Task extends Entity<TaskProps> {
         return this.props.name
     }
 
+    public getDetail() {
+        return this.props.detail
+    }
+
+    public getPriority() {
+        return this.props.priority
+    }
+
     public changeName(newName: string) {
         const name = TaskName.factory({
             value: newName
@@ -21,26 +31,52 @@ export default class Task extends Entity<TaskProps> {
         this.props = {...this.props, name}
     }
 
+    public changeDetail(newDetail: string) {
+        const detail = TaskDetail.factory({
+            value: newDetail
+        })
+
+        this.props = { ...this.props, detail }
+    }
+
+    public changePriority(newPriority: number) {
+        const priority = TaskPriority.factory({
+            value: newPriority
+        })
+
+        this.props = { ...this.props, priority }
+    }
+
     public static factory(props: FactoryProps) {
         
         const name = TaskName.factory({
             value: props.name.value
         })
 
-        return new Task({name})
+        const detail = TaskDetail.factory({
+            value: props.detail?.value || ''
+        })
+
+        const priority = TaskPriority.factory({
+            value: props.priority?.value  || 1
+        })
+
+        return new Task({name, detail, priority })
     }
 }
 
 type TaskProps = {
     id?: number
     name: TaskName
-    detail?: string
-    priority?: any
+    detail?: TaskDetail
+    priority?: TaskPriority
     isCompleted?: boolean
     categories?: any[]
 }
 
 type FactoryProps = {
     name: TaskNameProps
+    detail: TaskDetailProps
+    priority?: TaskPriorityProps
 }
 
